@@ -1,0 +1,102 @@
+---
+title: |
+ | \vspace{5cm} "EUROPEAN UNION CRISIS RESPONSE: IDENTITY FORMATION AND FOREIGN POLICY DISCOURSE"
+author:  "Thalie Emond"
+date: "11/12/2021"
+output: 
+  pdf_document:
+    toc: FALSE
+subtitle: | 
+ | \vspace{5cm} 'POLI-524: Political Development in Europe' 
+geometry: left=2.5cm,right=2.5cm,top=2cm,bottom=2cm
+
+---
+```{r setup, include=FALSE, results='hide'}
+knitr::opts_chunk$set(echo = TRUE, warning = F)
+#install.packages(c("haven", "psych", "tidyverse", "dyplr", "ggplot2", "png", "remotes", "viridis", "likert", "plotly", "maptools", "doBy", "gganimate", "gpclib", "readxl", "gapminder", "transformr", "stringr", "kableExtra", "scales", "magick", "stargazer", "tinytex"))
+library(haven)
+library(psych)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(remotes)
+library(png)
+library(viridisLite)
+library(viridis)
+library(likert)
+library(plotly)
+library(maptools)
+library(doBy)
+library(gganimate)
+library(gpclib)
+gpclibPermit()
+library(readxl)
+library(stringr)
+library(kableExtra)
+library(magick)
+library(modelsummary)
+library(tinytex)
+```
+
+\newpage
+
+
+# Introduction
+
+&nbsp;&nbsp; This proposal will elaborate on a potential research topic pertaining to political development in Europe, being the relationship between the identity of the European Union (EU) and its foreign policy system. The first section will introduce the research question and case-studies that the paper will explore, aiming to explain the relationship between the EU’s identity and foreign policy discourse in the context of interstate geopolitical conflicts in 21st-century Europe. Then, it will briefly list a literature review relevant to the relationship of interest. And the last section proposes the two methodological frameworks that this research paper will use.
+
+# Background
+&nbsp;&nbsp; A popular misconception about the EU is that it represents and acts in the interests of the whole European continent without accounting for the plurality of identities regrouped under the regional organization. As a supranational entity made up of 27 members out of 44 countries located in Europe, it is often ascribed a monolithic identity that conflates diplomatic collaboration with cultural and political proximity. For example, Hansen and Jonsson’s (32, 2014) imputed whiteness and racism to the EU’s identity, igniting an intense debate in Western academia on the EU’s identity. In recent years, the way European countries handled refugees of non-Western descent, including, but not limited to, people from the Middle East and Sub-Saharan Africa, has garnered international criticism, contributing to the image of Europe as unwelcoming to non-European people. Yet, the Greek debt crisis increased tensions within the EU, showcasing the interconnectedness of Eurozone member states, who compelled Greece to withdraw from the economic pact, and regional disparity between Mediterranean and North European EU members (Streeck 2015, 21). In sum, both popular and academic debates on the EU tend to define the organization’s identity on the basis of prominent ethnic or economic differences that gain much more visibility in periods of crisis.  
+
+&nbsp;&nbsp; By brushing aside the plurality of identities within the EU, dominant discourses overlook the multiplicity of relations between members and non-members that adds layers of complexity to interpreting what the EU’s identity (Ammaturo 2019, 549), particularly during uneasy times. In detail, foreign policy responses of the EU Council, which set out the political priorities of the organization (European Council., n.d.), and individual EU member states reveal what drives identity formation processes. Relations among EU and non-EU member states can factor in national and supranational reactions to interstate geopolitical crises, such as the Russo-Georgian military conflict in 2008, the Annexation of Crimea in 2014, and the ongoing Russo-Ukrainian war since 2021. Beyond legally binding agreements like the North Atlantic Transatlantic Organization (NATO) that determine the collective stance of signatories on certain crises, there are particular discursive elements exhibited in foreign policy statements that reveal substantive information on EU identity formation. Given this puzzling phenomena, this research paper will investigate the following question: how do EU identity formation processes affect foreign policy responses to interstate military conflict on European soil in the 21st century?
+
+
+## Literature Review
+
+&nbsp;&nbsp; Several scholars have discussed at length identity formation in European international organizations and discursive analysis of foreign policy in Europe. To start, the definition of EU identity varies depending on the analytical framework through which it is observed. For instance, Manners and Whitman (398-399, 2003) argued that the international identity of the EU should be explained outside conventional understandings of identity emphasizing socio-cultural difference and instead draw on the sociopolitical networks of its member states, since it is a supranational organization voicing the interests of multiple actors. Also, Jørgensen and Wessel (2012, 286) suggest that, from a legal perspective, the European Constitution defines the EU's identity along a set of laws and institutional roles that all member states must follow. Then, Larsen (2018, 76) synthesizes Manners and Whitman’s idea that social interactions and dynamics among EU and non-EU members shape both the EU’s identity and foreign policy, which are developed in discursive practices, such as forums. Similarly, White (1999, 57) advances that the interaction between the professional staff of EU member states in decision-making processes present the EU as a forum for “‘stakeholders’ [and] ‘epistemic communities’,” pointing to the interactive production of foreign policy at both the national and supranational level. In brief, EU studies scholars share a relatively long-standing view that the EU’s identity and foreign policy are produced by relational networks and institutional structures that encourage collaboration between delegations of EU member states. However, there is an apparent lack of quantitative research that corroborates the claims discussed above.
+
+
+## Methodology
+
+&nbsp;&nbsp; In line with Thelen and Mahoney’s article on comparative historical analysis frameworks, I will combine an case-based research approach and descriptive statistics to draw comparisons between three cases of geopolitical conflicts, examining whether there is a tangible correlational link between 
+
+
+&nbsp;&nbsp; The first half of the analysis section of the paper will detail the context of foreign policy responses from various actors to the three crisis, elaborating on the discursive meanings conveyed in official statements from those actors (European Council, 2022a). It will also highlight important social, economic, and political connections that may influence EU members’ actions. Next, the second half will employ descriptive statistics to find discursive patterns across foreign policy statements issued by the EU Council and individual member states. The final data set will include: systematized qualitative data that I will compile from EU and national official statements, which are all easily accessible from the EU website; and recorded instances (n = 5,266) of violent incidents and their fatalities in the three regions of interest from the Global Terrorism Database (GTD). As for the recent Ukrainian War, the scope of data will include GTD data until 2019 and will consider using reports from latest developments unless contextual or time constraints do not allow for it (European Council, 2022a).  The chronologically-ordered analysis of foreign policy responses in each case will use fixed effects for the rotation of the EU Council’s presidency.
+
+&nbsp;&nbsp; 
+
+\newpage
+# Reference List 
+
+\setlength{\parindent}{-0.2in}
+\setlength{\leftskip}{0.2in}
+\setlength{\parskip}{8pt}
+
+\
+\indent Ammaturo, F. R. (2019). “Europe and Whiteness: Challenges to European identity and European Citizenship in Light of Brexit and the ‘Refugees/Migrants Crisis,” European Journal of Social Theory, 22(4), 548–566. https://doi.org/10.1177/1368431018783318
+\
+\indent Carta, C. and Morin, J.-F. 2013. “EU Foreign Policy through the Lens of Discourse Analysis Making Sense of Diversity,” In The Globalisation, Europe, Multilateralism Series by  (Eds.) Carta, C. and Morin, J.-F, Ashgate: Brussels, 1-58
+\
+\indent European Council. n.d.. “Setting the EU's political agenda,” European Council of the European Union. https://www.consilium.europa.eu/en/european-council/role-setting-eu-political-agenda/ 
+\
+\indent European Council. 2022a. “Statement of the heads of state or government, meeting in Versailles, on the Russian military aggression against Ukraine, 10 March 2022,” European Council of the European Union, https://www.consilium.europa.eu/en/press/press-releases/2022/03/11/statement-of-the-heads-of-state-or-government-on-the-russian-aggression-against-ukraine-10-03-2022/
+\
+\indent European Council. 2022b. “Timeline - EU restrictive measures in response to the crisis in Ukraine,” European Council of the European Union, https://www.consilium.europa.eu/en/policies/sanctions/restrictive-measures-ukraine-crisis/history-ukraine-crisis/
+\
+\indent Hansen, P., & Jonsson, S. (2015). Eurafrica : the untold history of european integration and colonialism. Bloomsbury
+\
+\indent Hedström, P., and Swedberg, R. 1998. “Social Mechanisms: An Introductory Essay.” In Social Mechanisms, Cambridge University Press. 1–23
+\
+\indent IWPR Georgia. 2008. “Russian-Georgian War: Timeline,” Institute For War and Peace Reporting. https://iwpr.net/global-voices/august-2008-russian-georgian-war-timeline
+\
+\indent Jørgensen, K.E. and Wessel R.A. 2012. “The position of the European Union in (other) International Organizations: Confronting Legal and Political Approaches European Foreign Policy,” In European Foreign Policy: Legal and Political Perspectives by P. Koutrakos (Ed.). Cheltenham: Edward Elgar, 261-286. https://www.researchgate.net/publication/254884476 
+\
+\indent Larsen, H. (2018). " Discourse analysis in the study of European foreign policy". In Rethinking European Union Foreign Policy. England: Manchester University Press. 62-80. https://doi.org/10.7765/9781526137647.00010
+\
+\indent Manners I. and Whitman R.G. 2003. “The ‘Difference Engine’: Constructing and Representing the International Identity of the European Union.” Journal of European Public Policy, 10(3): 380–404
+\
+\indent National Consortium for the Study of Terrorism and Responses to Terrorism. 2019. “GTD Access,” Global Terrorism Database. https://www.start.umd.edu/gtd/ 
+\
+\indent Streeck, W. 2015. “Why the Euro Divides Europe.” New Left Review 95 (October): 5–26.
+\
+\indent White, B. 1999. “The European Challenge To Foreign Policy Analysis,” European Journal of International Relations, 5(1), 37-66.
