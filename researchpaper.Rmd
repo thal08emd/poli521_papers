@@ -100,3 +100,7 @@ library(tinytex)
 \indent Streeck, W. 2015. “Why the Euro Divides Europe.” New Left Review 95 (October): 5–26.
 \
 \indent White, B. 1999. “The European Challenge To Foreign Policy Analysis,” European Journal of International Relations, 5(1), 37-66.
+\
+indent START (National Consortium for the Study of Terrorism and Responses to Terrorism). (2021). Global Terrorism Database (GTD) [Data set]. University of Maryland. https://www.start.umd.edu/gtd
+\
+\indent START (National Consortium for the Study of Terrorism and Responses to Terrorism). (2021, August). Global Terrorism Database codebook: Methodology, inclusion criteria, and variables. University of Maryland. https://www.start.umd.edu/gtd/downloads/Codebook.pdf
