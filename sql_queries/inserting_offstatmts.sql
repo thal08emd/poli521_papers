@@ -1,0 +1,63 @@
+CREATE PROCEDURE dbo.InsertingForeignPolicyStatements
+        @country_txt CHAR(20) = NULL,
+        @conflict VARCHAR(50) = NULL,
+        @stmt_init VARCHAR(225) = NULL,
+        @init_entity VARCHAR(225) = NULL,
+        @idate DATE = NULL,
+        @iyear INT = NULL,
+        @crit1 VARBINARY = NULL,
+        @crit2 VARBINARY = NULL,
+        @crit3 VARBINARY = NULL,
+        @sanctions VARBINARY = NULL,
+        @targsanctions VARBINARY = NULL,
+        @bigfour VARBINARY = NULL,
+        @EUpresidency  CHAR(20) = NULL,
+        @tactical VARBINARY = NULL,
+        @rhetorical VARBINARY = NULL,
+        @threat_scope VARBINARY = NULL,
+        @membership_lang VARBINARY = NULL,
+        @verb_tense VARBINARY = NULL,
+        @active_passive VARBINARY = NULL,
+        @human_rights VARBINARY = NULL,
+        @ter_sovereignty VARBINARY = NULL,
+        @peace VARBINARY = NULL,
+        @securit VARBINARY = NULL, 
+        @democracy VARBINARY = NULL,
+        @soc_dev VARBINARY = NULL,
+        @econ_dec VARBINARY = NULL,
+        @source VARCHAR(225) = NULL
+AS
+    BEGIN
+     SET NOCOUNT ON;
+        INSERT INTO dbo.eucouncil_offstatmts
+            VALUES (
+                @country_txt ,
+                @conflict ,
+                @stmt_init ,
+                @init_entity ,
+                @idate ,
+                @iyear ,
+                @crit1 ,
+                @crit2 ,
+                @crit3 ,
+                @sanctions ,
+                @targsanctions ,
+                @bigfour ,
+                @EUpresidency  ,
+                @tactical ,
+                @rhetorical ,
+                @threat_scope ,
+                @membership_lang ,
+                @verb_tense ,
+                @active_passive ,
+                @human_rights ,
+                @ter_sovereignty ,
+                @peace ,
+                @securit , 
+                @democracy ,
+                @soc_dev ,
+                @econ_dec ,
+                @source 
+                );
+    END
+    GO
