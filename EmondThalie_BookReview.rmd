@@ -1,0 +1,73 @@
+---
+title: |
+ | \vspace{5cm} Book Review: _The Red Mirror: Putin’s Leadership and Russia’s Insecure Identity_
+ | \vspace{5cm}
+author: " "
+header-includes:
+    - \usepackage{setspace}\doublespacing
+date: "April 27, 2022"
+output: 
+  pdf_document:
+    toc: FALSE
+  indent: true
+subtitle: | 
+ | \vspace{1.5cm} Thalie Emond (260927077)
+ | \vspace{1.5cm} POLI 431: Nations and States
+ | \vspace{1.5cm} Department of Political Science, McGill University
+ | \vspace{1.5cm} Mr Philip-Emmanuel Aubry
+geometry: left=2.5cm,right=2.5cm,top=2cm,bottom=2cm
+
+---
+\pagenumbering{gobble}
+\setlength\parindent{24pt}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T, warning = F, message = F)
+library(tinytex) 
+```
+
+\newpage
+
+\pagenumbering{arabic}
+
+# Insecure Nationalism and Identity Politics: Examining Collective Trauma and Accountability in post-Soviet Russia
+
+### Introduction
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This book review will critically analyze The Red Mirror: Putin’s Leadership and Russia’s Insecure Identity by Gulnaz Sharafutdinova. This book disentangles the fantastical nature of post-Soviet Russian nationalism and identity politics which analogically borrows elements from the famed tale Through the Glass Looking-in. These analogies help readers who may not be well-versed in post-Soviet studies or take basic freedoms for granted which clouds their understanding of having to survive in authoritarian regimes. This paper aims to explore the dialectical scheme that Sharafutdinova uses along various methodological tools, such as empirical survey analysis and interpretivist approaches, to explain how identity politics, collective trauma, and Russia’s very one Newspeak play out in the Russian case. 
+
+To start, this paper will briefly summarize the main arguments that Sharafutdinova conveys in her book. Then, it will lay out the theoretical frameworks that she applies in her analysis of the evolution of Russia’s collective identity, while drawing parallels with the works of Benedict Anderson (1991), Linda Colley (2009), Hudson Meadwell (2020), and Timur Kuran (2017). Next, it will bring in other scholars, such as Stephen Saideman (2008), Michail A. Alexseev (2016), Aaron Erlich and Christopher Garner (2021) that have also looked into the peculiar case of Russian group identity in and outside of Russia, refining a little bit Sharafutdinova’s explanatory framework. Last, it will discuss the academic contribution of the book in the study of identity politics and nationalism at large. This paper argues that Gulnaz Sharafutdinova‘s The Red Mirror offers great insight on the intricate ways psychological and social structures influence nationalism, laying meaningful groundwork for nationalism studies as well as Western-based post-Soviet studies.
+ 
+### Background
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sharafutdinova (2020) begins her book by detailing the intersection between Soviet and Russian national identities from the inception of modern-day Russia until 2020, giving context to her subsequent psychological and sociological examinations of group identification and behaviour. Divided in three parts, each equally important to understanding Russian nationalism, The Red Mirror starts with a fast-paced overview of the social and political environment that the United Socialist Soviet Republic (USSR) rests before and after its dissolution in 1991. That first section of the book allows readers who may not have ties to the USSR through relatives or friends to make sense of the emotional baggage that Russian people have carried from the Soviet collapse. Not only does it contain clearly-outlined arguments but also it prefaces them so that readers can fully comprehend her explanations through the Russian population and her perspectives. For example, the roots of Russia’s insecure identity vis-a-vis its neighbours, the West, and, to some extent, the so-called Third World, can be traced back to the social engineering of the USSR under Stalin in order to consolidate a multiethnic state adhering to Marxist-Leninist ideology (44). And thus, primary and secondary schooling facilitated the indoctrination of populations in the USSR with Soviet ideals, ensuring a common culture from which derived political loyalty. State legitimacy in the USSR, however, was based on two forms of validation. External validation rested on its international reputation as a superpower, whereas internal validation comprised modes of group identification that enabled the population to distinguish themselves from the ‘other’. According to Sharafutdinova, post-Soviet Russian society was thrusted into a new world order in which once-competitors turned into unrivaled global players whom neighbouring countries banded with (43). Perceived betrayal from brotherly nations fed into a particular victimhood narrative that further distanced Russians from their international standing as a global superpower. To sum up, the collapse of the USSR shattered the worldview and sense of self  of the Russian population.  
+
+Next, the two last parts of the book explain the ways in which Putin's leadership and the Kremlin-controlled media took advantage of that narrative of victimhood to better control the Russian population. Indeed, shame and humiliation accompanied the fall of an empire that was touted as a one of the great liberators of Europe from the fascist Nazis. Amidst a period of confusion and despair, the Russian population, who was left by their own devices after Russian elites’ scramble for resources, became particularly enchanted by this new reassuring political figure. Former state security agent Vladimir Putin seemingly knew the exact “hot buttons'' to push in order to get Russians to play right into his hands, instrumentalizing this emotional baggage of shame and humiliation (Sharafutdinova 2020, 18). For instance, Putin’s carefully-constructed image provided reassurance in  the 1990s, which the Kremlin brushed as a period of societal decay, or likhie devianostye, tainted Yeltsin’s kleptocratic legacy. Hence, the title of the book begins to take its meaning with the Russian people portrayed as Alice and Putin as the Red Knight of Lewis Caroll’s famous fairy tale Through the Glass Looking-in. Jaded by the political rivalries between corrupted wealthy Russians fighting for resource monopoly that further deteriorated local economies, Russian society turned its back from a harsh reality laid out in plain sight and, by extension, their imperial history, to favour a whitewashed history based on this ‘chosen trauma’ of a oppressive communist past (111). Through the use of state-controlled media and political tactics, the Kremlin effectively and successfully legitimized Putin as a strong leader in the eyes of a directionless Russian population in need of a protective figure in a world filled with moral decay. Putin’s first presidential mandate from 2000 to 2008 consisted of bringing economic stability to Russia, then turned into upholding noble Russian traditional and moral values in his second two-term mandate from 2012 to 2024. In summary, The Red Mirror discusses Russian nationalism beyond the repressive political climate in Russia, dissecting the historical weight of Soviet history and the social engineering required to give meaning to an escapist form of nationalism .
+
+
+### THEORY
+
+_Social Identity Theories_
+
+
+To start, Anderson’s Imagined Community remains one of the foundational theories on national identities, describing this incommunicable feeling of 
+&nbsp;&nbsp; 
+
+
+
+
+\newpage
+
+
+# Reference List 
+
+\setlength{\parindent}{-0.2in}
+\setlength{\leftskip}{0.2in}
+\setlength{\parskip}{8pt}
+
+\
+\indent add reference 
+\
+\
+\
+\indent add reference
