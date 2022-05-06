@@ -1,0 +1,538 @@
+---
+title: "data_cleaning"
+author: "Thalie Emond"
+date: "22/03/2022"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(haven)
+library(psych)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(remotes)
+library(png)
+library(viridisLite)
+library(viridis)
+#library(likert)
+#library(plotly)
+library(maptools)
+library(doBy)
+#library(gganimate)
+#library(gpclib)
+#gpclibPermit()
+library(readxl)
+library(stringr)
+library(kableExtra)
+library(magick)
+library(tinytex)
+library(sna)
+#remotes::install_github("wqmeeker/RTseries")
+library(RTseries)
+library(lemon)
+```
+
+## GTD
+
+```{r downsize, echo=FALSE}
+gtdb70_19 <- read_xlsx("globalterrorismdb_0221dist.xlsx", )
+
+
+gtdb_filtered <- gtdb70_19 %>%
+  filter(country == "74" | country == "214", between(iyear, 2007, 2019)) %>% # Georgia (74), Ukraine (214)
+  select(iyear, imonth, iday, country_txt, provstate, city, latitude, 
+         location, summary, crit1, crit2, crit3, 
+         attacktype1, attacktype1_txt, targtype1,
+         targtype1_txt, targtype2, targtype2_txt, targtype3, targtype3_txt,
+         corp1, weaptype1, weaptype1_txt, gsubname, guncertain1, individual,
+         nwound, nkill, nhostkid, kidhijcountry, ndays, nreleased, INT_LOG,
+         INT_MISC, INT_IDEO, INT_ANY, scite1, scite2, scite3, dbsource)
+
+## from github
+
+gtdb_filtered$iday <- as.integer(gsub(0, 1, gtdb_filtered$iday))
+
+# Create a new variable "idate"
+gtdb_filtered$idate <- as.Date(paste0(gtdb_filtered$iyear,
+                       stringr::str_pad(as.character(gtdb_filtered$imonth), width = 2, side = "left", pad = "0"),
+                       stringr::str_pad(as.character(gtdb_filtered$iday), width = 2, side = "left", pad = "0")), "%Y%m%d")
+
+## saving 1st version
+
+save(gtdb_filtered, file = "gtdb_ver0323.RData")
+load("gtdb_ver0323.RData")
+
+##### compressing data: casaulties by day
+
+full_cal <- data.frame(idate=c(seq.Date(as.Date("2008-01-01"),as.Date("2022-04-22"),"1 day")))
+full_cal <- full_cal %>%
+  mutate(days = seq(1,length(full_cal$idate), 1))
+
+gtdb_filtered <- gtdb_filtered %>%
+  select(country_txt, idate, nwound, nkill)
+gia2008 <- subset(gtdb_filtered, country_txt == "Georgia")
+gia2008_cal <- gia2008 %>%
+  summarise(country_txt = country_txt,  nwound = nwound, nkill= nkill, idate = idate, days = seq(1,length(gia2008$idate), 1))
+
+gia2008_cal <- subset(full_cal, idate > "2008-01-01" & idate < "2018-02-23")
+gia2008 <- left_join(gia2008_cal, gia2008, by = c("idate"))
+
+gia2008[235,5] <- 194
+gia2008[235,4] <- 470
+gia2008[235,3] <- "Georgia"
+
+#gia2008 <- aggregate(gia2008[,3:4], gia2008[,1:2], FUN = sum, na.rm = T)
+gia2008 <- gia2008 %>%
+  group_by(country_txt) %>%
+  arrange() %>%
+  mutate(sum_nkill = cumsum(nkill), sum_nwound = cumsum(nwound)) %>%
+  ungroup(country_txt)
+#gia2008 <- left_join(gia2008_cal, gia2008, by = c("idate", "country_txt", "nkill", "nwound"))
+
+gia2008 <- gia2008 %>%
+  fill(sum_nkill, sum_nwound) 
+for (i in length(gia2008$idate)) {
+  i <- c("Georgia")
+  gia2008[,3] <- i
+}
+
+#save(gia2008, file = "gia2008.RData")
+
+######
+ukr2014 <- subset(gtdb_filtered, country_txt == "Ukraine")
+ukr2014_cal <- subset(full_cal, idate > "2008-04-21" & idate < "2019-12-11")
+ukr2014_cal <- ukr2014_cal %>%
+  mutate(days = seq(1,length(ukr2014_cal$idate), 1))
+
+ukr2014 <- aggregate(ukr2014[,3:4], ukr2014[,1:2], FUN = sum, na.rm = T)
+ukr2014 <- ukr2014 %>%
+  group_by(country_txt) %>%
+  mutate(sum_nkill = cumsum(nkill), sum_nwound = cumsum(nwound)) %>%
+  ungroup(country_txt)
+
+ukr2014 <- left_join(ukr2014_cal, ukr2014, by = c("idate")) 
+
+for (i in length(ukr2014$idate)) {
+  i <- c("Ukraine")
+  ukr2014[,3] <- i
+}
+
+ukr2014[1, 4:7] <- 0
+ukr2014<- ukr2014 %>%
+  fill(sum_nkill, sum_nwound) 
+
+#save(ukr2014, file = "ukr2014.RData")
+
+```
+
+```{r}
+
+load("gia2008.RData")
+load("ukr2014.RData")
+
+######
+## dataset from 2022 Ukraine Invasion
+
+ukr22_fatal <- read_xlsx("statistic_id1296924_number-of-civilian-casualties-during-the-war-in-ukraine-daily-2022.xlsx", sheet = 3)
+ukr22_fatal$idate <- as.Date(ukr22_fatal$idate, "%Y-%m-%d")
+
+ukr2022_cal <- subset(full_cal, idate > "2022-02-20" & idate < "2022-04-30")
+ukr2022_cal <- ukr2022_cal %>%
+  mutate(days = seq(1,length(ukr2022_cal$idate), 1))
+ukr2022 <- full_join(ukr2022_cal, ukr22_fatal, by = c("idate")) 
+
+ukr2022 <- aggregate(ukr2022[,3:4], ukr2022[,1:2], FUN = sum, na.rm = T)
+for (i in length(ukr2022$idate)) {
+  i <- c("Ukraine")
+  ukr2022[,5] <- i
+  ukr2022[,6] <- NA
+  ukr2022[,7] <- NA
+}
+ukr2022 <- rename(ukr2022, country_txt = V5, nkill = V6, nwound = V7, sum_nkill = Killed, sum_nwound = Injured)
+
+ukr2022<- ukr2022 %>%
+  fill(sum_nkill, sum_nwound) 
+
+#save(ukr2022, file = "ukr2022.RData")
+load("ukr2022.RData")
+
+
+###### SQL stuff
+
+DB_draft <- read_csv("DB_draft.csv", trim_ws = T)
+
+recoding_binaries <- function(X){
+  Y <- ifelse(is.na(X), NA,
+              ifelse(X == "NULL", NA,
+                     ifelse(X == "0x00", 0,
+                            ifelse(X == "0x01", 1, NA))))
+  
+  return(Y)
+}
+
+recoding_binaries(DB_draft$sanctions)
+
+eufp_df <- DB_draft %>% 
+  group_by(country_txt, conflict, stmt_init, init_entity, 
+           idate, iyear, EUpresidency, source) %>%
+  summarise_all(recoding_binaries)
+eufp_df[9,8] <- c("https://www.consilium.europa.eu/en/press/press-releases/2017/11/21/eu-adds-the-governor-of-sevastopol-to-its-sanctions-list-over-actions-against-ukraine-s-territorial-integrity/")
+
+eufp_df <- eufp_df[-c(5,11), ]
+
+
+## Merging 
+full_cal <- data.frame(idate=c(seq.Date(as.Date("2008-01-01"),as.Date("2022-04-22"),"1 day")))
+fulldata_v1 <- left_join(full_cal, gia2008, by = c("idate" = "idate")) %>% 
+  mutate(country_txt = ifelse(is.na(country_txt), "Georgia", "Georgia"),
+         conflict = c("Russo-Georgia War"))
+
+fulldata_v2 <- left_join(full_cal, ukr2014, by = c("idate" = "idate")) %>% 
+  mutate(country_txt = ifelse(is.na(country_txt), "Ukraine", "Ukraine"),
+         conflict = c("Crimea Annexation"))
+fulldata_v3 <- left_join(full_cal, ukr2022, by = c("idate" = "idate")) %>% 
+  mutate(country_txt = ifelse(is.na(country_txt), "Ukraine", "Ukraine"),
+         conflict = c("Ukraine Invasion"))
+
+fulldata_v4 <- rbind(fulldata_v1, fulldata_v2, fulldata_v3)
+
+#fulldata_v4 <- fulldata_v4[,-c(2)]
+hey <- fulldata_v4[!duplicated(fulldata_v4),]
+data_fullver <- left_join(hey, eufp_df,
+                          by = c("idate", "country_txt", "conflict"), all.x = T)
+dupes <- data_fullver[!duplicated(data_fullver$source),]
+data_fullver <- left_join(hey, dupes, all.x = T)
+
+
+#save(data_fullver, file = "data_fullver.RData")
+load("data_fullver.RData")
+ukr_fullver <- subset(data_fullver, country_txt == "Ukraine")
+
+
+data_fullver <- data_fullver %>%
+  dplyr::group_by(conflict) %>%
+  fill(sum_nkill, sum_nwound) %>%
+  dplyr::ungroup()
+
+```
+
+```{r tables, include=F}
+
+ukr2014_cal <- subset(full_cal, idate > "2014-02-01" & idate < "2015-02-20")
+ukr2014_cal <- ukr2014_cal %>%
+  mutate(crisis_days = seq(1,length(ukr2014_cal$idate), 1))
+for (i in length(ukr2014_cal$idate)) {
+  i <- c("Ukraine Invasion")
+  ukr2014_cal[,3] <- i
+}
+ukr2014_cal <- rename(ukr2014_cal, conflict = V3)
+data_fullver1 <- left_join(data_fullver, ukr2014_cal, by = c("conflict", "idate"))
+
+#save(data_fullver, file = "data_fullver.RData")
+#save(data_fullver1, file = "data_fullver1.RData")
+
+data_fullver %>% 
+  #group_by(idate, country_txt, conflict) %>%
+  select(conflict) %>%
+  #filter(EUpresidency == "France" & EUpresidency == "Belgium" & EUpresidency == "Poland") %>%
+  #count(n(data_fullver$source))
+  summarise(num_stmts = n()) %>%
+  count(num_stmts)
+  
+data_fullver %>%
+  group_by(stmt_init) %>%
+  count(securit) %>%
+  summarise(num_stmts = sum(n, na.rm = T))
+
+country_entries <- data_fullver %>%
+  group_by(country_txt, active_passive) %>%
+  count(days) %>%
+  summarise(num = sum(n, na.rm = T))
+
+conflict_entries <- data_fullver %>%
+  group_by(conflict) %>%
+  count(securit) %>%
+  summarise(num = sum(n, na.rm = T))
+  
+event_entries <- data_fullver %>%
+  group_by(conflict, country_txt) %>%
+  count(country_txt) %>%
+  summarise(num = sum(n, na.rm = T))
+
+threat_entries <- data_fullver %>%
+  group_by(conflict, threat_scope, country_txt) %>%
+  count(country_txt) %>%
+  summarise(num = sum(n, na.rm = T))
+
+sanctions_entries <- data_fullver %>%
+  group_by(sanctions,conflict, country_txt) %>%
+  count(country_txt) %>%
+  summarise(num = sum(n, na.rm = T))
+
+targsanctions_entries <- data_fullver %>%
+  group_by(targsanctions, conflict, country_txt) %>%
+  count(country_txt) %>%
+  summarise(num = sum(n, na.rm = T))
+
+textual_entries <- data_fullver %>%
+  filter(init_entity == "EU") %>%
+  group_by(conflict, country_txt) %>%
+  #count(country_txt) %>%
+  summarise(across(human_rights:econ_dev, sum)) #na.rm = T
+
+discursive_entries <- data_fullver %>%
+  filter(init_entity == "EU") %>%
+  group_by(conflict, country_txt) %>%
+  #count(country_txt) %>%
+  summarise(across(tactical:active_passive, sum))
+
+casualties_active <- data_fullver1  %>%
+  group_by(conflict, active_passive, source) %>%
+  #count(source) %>%
+  #arrange(days) %>%
+  mutate(num_days = last(days, source), c_days = last(crisis_days, source)) %>%
+  select(days, num_days, sum_nwound, sum_nkill, idate, c_days, conflict) %>%
+  summarise(days = last(days, source),
+            num_nwound = last(sum_nwound, num_days),
+            num_nkill = last(sum_nkill, num_days),
+            idate = last(idate, num_days))
+
+
+```
+
+```{r simulation, include=F}
+sims <- 20
+event <- 0
+for (i in 1:length(sims)) {
+  simFP = sample(data_fullver, 9, replace = T)
+  if (sum(simFP) < 9) {
+    event = event + 1
+  }
+  print(event)
+}
+pr = event / sims
+pr
+
+table(dbinom(data_fullver$active_passive, size = 2, prob = 0.5))
+
+
+#######
+
+
+ukr_casualt <- ggplot(ukr2022) +
+  geom_area(aes(idate, sum_nkill), fill = "red", alpha = 0.5) +
+  stat_identity(geom = "area", aes(idate, sum_nwound), fill = "cadetblue3", alpha = 0.5, color = "black") +
+  labs(x = "Number of Killed/Injured", y = "Density") 
+
+crimea_casualt <- ggplot(ukr2014) +
+  geom_area(aes(idate, sum_nkill), fill = "red", alpha = 0.5) +
+  stat_identity(geom = "area", aes(idate, sum_nwound), fill = "cadetblue3", alpha = 0.5, color = "black") +
+  labs(x = "Number of Killed/Injured", y = "Density") 
+
+georg_casualt <- ggplot(gia2008) +
+  geom_area(aes(idate, sum_nkill), fill = "red", alpha = 0.5) +
+  stat_identity(geom = "area", aes(idate, sum_nwound), fill = "cadetblue3", alpha = 0.5, color = "black") +
+  labs(x = "Number of Killed/Injured", y = "Density") 
+
+fulldata_v5 <- rbind(gia2008, ukr2014, ukr2022)
+
+country_casualt <- ggplot(fulldata_v5) +
+  geom_area(aes(idate, sum_nkill), fill = "red", alpha = 0.5) +
+  stat_identity(geom = "area", aes(idate, sum_nwound), fill = "cadetblue3", alpha = 0.5, color = "black") +
+  labs(x = "Date", y = "Density") +
+  facet_wrap(~country_txt, scales = "free", nrow = 2)
+
+#####
+
+
+ukr_casualt <- ggplot(ukr2022) +
+  geom_density(aes(sum_nkill), fill = "red", alpha = 0.5) +
+  stat_function(fun = rbinom(ukr2022, mean(), 0.2), aes(idate, sum_nwound), alpha = 0.5, color = "black") +
+  labs(x = "Date", y = "Density") 
+
+con.df <- data.frame(
+  con = c("Crimea Annexation", "Russo-Georgia War",  "Ukraine Invasion"),
+  mean_conf = tapply(data_fullver1$sum_nkill, data_fullver1$conflict, mean, na.rm = T),
+  mean_inj = tapply(data_fullver1$sum_nwound, data_fullver1$conflict, mean, na.rm = T)
+)
+tapply(data_fullver1$sum_nkill, data_fullver1$conflict, sd, na.rm = T)
+tapply(data_fullver1$sum_nkill, data_fullver1$conflict, var, na.rm = T)
+
+country_casualt <- ggplot(data_fullver1) +
+  geom_density(aes(sum_nkill, fill = conflict), alpha = 0.5, show.legend = F) +
+  stat_function(fun = dnorm(quantile(data_fullver1$sum_nkill, na.rm = T),
+                            mean = 0,
+                            sd = 1), 
+                aes(idate, sum_nkill), alpha = 0.5, color = "black") +
+  labs(x = "Number of Casualties", y = "Density")  +
+  ggtitle("Normal Distribution (0,1)") +
+  xlim(-1000,4000) +
+  facet_wrap(~conflict, scales = "free", nrow = 3) +
+  theme(legend.position = "bottom", legend.title = element_blank())
+
+true_densconflict <- country_casualt + geom_vline(data = con.df, aes(xintercept = mean_conf, color = con), mean_conf, size = 0.7)
+
+country_inj <- ggplot(data_fullver1) +
+  geom_density(aes(sum_nwound, fill = conflict), alpha = 0.5, show.legend = F) +
+  stat_function(fun = dnorm(quantile(data_fullver1$sum_nwound, na.rm = T),
+                            mean = 0,
+                            sd = 1), 
+                aes(idate, sum_nwound), alpha = 0.5, color = "black") +
+  labs(x = "Number of Injured", y = "Density")  +
+  ggtitle("Normal Distribution of (0,1)") +
+  xlim(-1000,4000) +
+  facet_wrap(~conflict, scales = "free", nrow = 3) +
+  theme(legend.position = "bottom", legend.title = element_blank())
+
+true_densinj <- country_inj + geom_vline(data = con.df, aes(xintercept = mean_inj, color = con), mean_inj, size = 0.7)
+
+
+true_densconflict
+true_densinj
+
+
+country_casualt <- ggplot(data_fullver1) +
+  geom_density(aes(sum_nkill, fill = conflict), alpha = 0.5, show.legend = F) +
+  labs(x = "Date", y = "Density")  +
+  facet_wrap(~conflict, scales = "free", nrow = 3)
+
+
+con.df <- data.frame(
+  con = c("Crimea Annexation", "Russo-Georgia War",  "Ukraine Invasion"),
+  mean_conf = tapply(data_fullver1$sum_nkill, data_fullver1$conflict, mean, na.rm = T),
+  mean_inj = tapply(data_fullver1$sum_nwound, data_fullver1$conflict, mean, na.rm = T)
+)
+tapply(data_fullver1$sum_nkill, data_fullver1$conflict, sd, na.rm = T)
+tapply(data_fullver1$sum_nkill, data_fullver1$conflict, var, na.rm = T)
+
+memb_graph <- ggplot(data_fullver1) +
+  geom_bar(aes(membership_lang, fill = factor(conflict))) +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  labs(x = "Inclusive v. Exclusive language", y = "Number of statements")
+
+active_graph <- ggplot(data_fullver1) +
+  geom_bar(aes(active_passive, fill = factor(conflict))) + 
+  ylim(0,10) +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  labs(x = "Inclusive v. Exclusive language", y = "Number of statements")
+
+
+```
+
+```{r echo = F}
+library(modelsummary)
+memb_graph
+active_graph
+par(mfcol = c(2,2))
+
+passive1 <- coef(lm(active_passive ~ sum_nkill + days + I(sum_nkill*days), data = data_fullver1))
+
+passive2 <- coef(lm(active_passive ~ sum_nwound + days + I(sum_nwound*days), data = data_fullver1))
+
+memblang1 <- coef(lm(membership_lang ~ sum_nkill + days + I(sum_nkill*days), data = data_fullver1))
+
+memblang2 <- coef(lm(membership_lang ~ sum_nwound + days + I(sum_nwound*days), data = data_fullver1))
+
+tact1 <- coef(lm(tactical ~ sum_nkill + days + I(sum_nkill*days), data = data_fullver1))
+
+tact2 <- coef(lm(tactical ~ sum_nwound + days + I(sum_nwound*days), data = data_fullver1))
+
+rheto1 <- coef(lm(rhetorical ~ sum_nkill + days + I(sum_nkill*days), data = data_fullver1))
+
+rheto2 <- coef(lm(rhetorical ~ sum_nwound + days + I(sum_nwound*days), data = data_fullver1))
+
+verb1 <- coef(lm(verb_tense ~ sum_nkill + days + I(sum_nkill*days), data = data_fullver1))
+
+verb2 <- coef(lm(verb_tense ~ sum_nwound + days + I(sum_nwound*days), data = data_fullver1))
+
+threat1 <- coef(lm(threat_scope ~ sum_nkill + days + I(sum_nkill*days), data = data_fullver1))
+
+threat2 <- coef(lm(threat_scope ~ sum_nwound + days + I(sum_nwound*days), data = data_fullver1))
+
+
+p1_bh_0 <- passive1[1] + passive1[2]
+p1_bh_1 <- passive1[1] + passive1[2] + passive1[3] + passive1[4]
+p1_bh_2 <- p1_bh_1 - p1_bh_0
+
+p2_bh_0 <- passive2[1] + passive2[2]
+p2_bh_1 <- passive2[1] + passive2[2] + passive2[3] + passive2[4]
+p2_bh_2 <- p2_bh_1 - p2_bh_0
+
+p_bh_3 <- p2_bh_2-p1_bh_2
+
+m1_bh_0 <- memblang1[1] + memblang1[2]
+m1_bh_1 <- memblang1[1] + memblang1[2] + memblang1[3] + memblang1[4]
+m1_bh_2 <- m1_bh_1 - m1_bh_0
+
+m2_bh_0 <- memblang2[1] + memblang2[2]
+m2_bh_1 <- memblang2[1] + memblang2[2] + memblang2[3] + memblang2[4]
+m2_bh_2 <- m2_bh_1 - m2_bh_0
+
+m_bh_3 <- m2_bh_2-m1_bh_2
+
+t1_bh_0 <- tact1[1] + tact1[2]
+t1_bh_1 <- tact1[1] + tact1[2] + tact1[3] + tact1[4]
+t1_bh_2 <- t1_bh_1 - t1_bh_0
+
+t2_bh_0 <- tact2[1] + tact2[2]
+t2_bh_1 <- tact2[1] + tact2[2] + tact2[3] + tact2[4]
+t2_bh_2 <- t2_bh_1 - t2_bh_0
+
+t_bh_3 <- t2_bh_2-t1_bh_2
+
+r1_bh_0 <- rheto1[1] + rheto1[2]
+r1_bh_1 <- rheto1[1] + rheto1[2] + rheto1[3] + rheto1[4]
+r1_bh_2 <- r1_bh_0 - r1_bh_1
+
+r2_bh_0 <- rheto2[1] + rheto2[2]
+r2_bh_1 <- rheto2[1] + rheto2[2] + rheto2[3] + rheto2[4]
+r2_bh_2 <- r2_bh_0 - r2_bh_1
+
+r_bh_3 <- r2_bh_2-r1_bh_2
+
+th1_bh_0 <- threat1[1] + threat1[2]
+th1_bh_1 <- threat1[1] + threat1[2] + threat1[3] + threat1[4]
+r1_bh_2 <- r1_bh_0 - r1_bh_1
+
+th2_bh_0 <- threat2[1] + threat2[2]
+th2_bh_1 <- threat2[1] + threat2[2] + threat2[3] + threat2[4]
+t2_bh_2 <- t2_bh_0 - t2_bh_1
+
+t_bh_3 <- t2_bh_2-t1_bh_2
+
+v1_bh_0 <- verb1[1] + verb1[2]
+v1_bh_1 <- verb1[1] + verb1[2] + verb1[3] + verb1[4]
+v1_bh_2 <- v1_bh_0 - v1_bh_1
+
+v2_bh_0 <- verb2[1] + verb2[2]
+v2_bh_1 <- verb2[1] + verb2[2] + verb2[3] + verb2[4]
+v2_bh_2 <- v2_bh_0 - v2_bh_1
+
+v_bh_3 <- v2_bh_2-v1_bh_2
+
+
+kable2 <- data.frame(
+  Coefficients = c("Beta0", "Beta^1", "Beta^2", "Beta0", "Beta^1", "Beta^2", "Beta^3"),
+  Passive = c(p1_bh_0, p1_bh_1, p1_bh_2, p2_bh_0, p2_bh_1, p2_bh_2, p_bh_3),
+  Exclusive = c(m1_bh_0, m1_bh_1, m1_bh_2, m2_bh_0, m2_bh_1, m2_bh_2, m_bh_3),
+  Tactical = c(t1_bh_0, t1_bh_1, t1_bh_2, t2_bh_0, t2_bh_1, t2_bh_2, t_bh_3),
+  Rhetorical = c(r1_bh_0, r1_bh_1, r1_bh_2, r2_bh_0, r2_bh_1, r2_bh_2, r_bh_3),
+  EUThreat = c(th1_bh_0, th1_bh_1, th1_bh_2, th2_bh_0, th2_bh_1, th2_bh_2, th_bh_3),
+  PresentVerb = c(v1_bh_0, v1_bh_1, v1_bh_2, v2_bh_0, v2_bh_1, v2_bh_2, v_bh_3)
+)%>%
+  knitr::kable(format = "latex", digits = 4) %>%
+  kable_styling(font_size = 10, latex_options = c("striped", "scale_down")) %>%
+  add_header_above("Casualties" = 3,
+                   "Injured" = 3,
+                   "Difference" = 1 )
+
+
+
+
+```
+
+Passive : $Y = \beta_0+ \beta_1X_{Casualties} + \beta_2Z_{days} + \beta_3_{X_Casualties * Z_days}$
